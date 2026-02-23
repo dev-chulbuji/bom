@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="🌸 김봄 첫돌 초대장" />
+  <meta property="og:description" content="2026년 2월 28일 · 판교 코드야드 메리어트" />
+  <title>🌸 김봄 v1.0.0 — 첫돌 초대장</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Design tokens ─────────────────────────────────── */
+    :root {
+      --pink:       #f38ba8;
+      --pink-light: #fff0f4;
+      --mint:       #a6e3a1;
+      --blue:       #89b4fa;
+      --yellow:     #f9e2af;
+      --peach:      #fab387;
+      --dark:       #1e1e2e;
+      --dark2:      #313244;
+      --dark3:      #45475a;
+      --text:       #2d2d3a;
+      --subtext:    #666680;
+      --white:      #ffffff;
+      --card-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
+
+    /* ─── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(160deg, #fff5f8 0%, #f4fff8 50%, #f5f2ff 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+    }
+
+    /* ─── Boot loader ───────────────────────────────────── */
+    #boot {
+      position: fixed; inset: 0;
+      background: var(--dark);
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 2rem;
+      cursor: pointer;
+      transition: opacity .6s ease, visibility .6s ease;
+    }
+    #boot.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .term {
+      width: 100%; max-width: 560px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(13px, 3.2vw, 15px);
+    }
+    .tl {
+      color: var(--mint); margin-bottom: .45rem;
+      opacity: 0; transform: translateY(8px);
+      animation: tl-in .35s ease forwards;
+    }
+    .tl.c { color: var(--dark3); }
+    .tl.b { color: var(--blue); }
+    .tl.p { color: var(--pink); }
+    .tl.y { color: var(--yellow); }
+
+    .prog-wrap { width:100%; background: var(--dark2); border-radius:4px; height:6px; margin:.8rem 0; overflow:hidden; }
+    .prog-bar {
+      height:100%; border-radius:4px;
+      background: linear-gradient(90deg, var(--pink), var(--blue), var(--mint));
+      width:0; animation: prog 2.2s ease 1.2s forwards;
+    }
+    @keyframes prog { to { width:100%; } }
+
+    .boot-skip {
+      margin-top: 2.5rem;
+      color: var(--dark3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      animation: blink 1.2s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    @keyframes tl-in { to { opacity:1; transform:translateY(0); } }
+
+    /* ─── Petals ─────────────────────────────────────────── */
+    #petals { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .petal {
+      position:absolute; top:-24px;
+      border-radius: 50% 5% 50% 5%;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0%   { opacity:.8; transform: translateX(0) rotate(0deg); }
+      100% { top:110vh; opacity:0; transform: translateX(80px) rotate(600deg); }
+    }
+
+    /* ─── Main layout ────────────────────────────────────── */
+    #main { position:relative; z-index:1; }
+
+    /* ─── Hero ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 2rem 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(.75rem, 2vw, .9rem);
+      background: var(--dark);
+      color: var(--mint);
+      padding: .4rem 1.1rem;
+      border-radius: 100px;
+      margin-bottom: 1.8rem;
+      letter-spacing: .04em;
+    }
+    .badge-dot { width:8px; height:8px; background:var(--mint); border-radius:50%; animation: glow 1.5s ease-in-out infinite; }
+    @keyframes glow { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+    .hero-name {
+      font-size: clamp(4rem, 18vw, 9rem);
+      font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #f38ba8 0%, #fab387 40%, #f9e2af 80%, #a6e3a1 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .2rem;
+    }
+    .hero-sub-title {
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      font-weight: 700; color: var(--dark);
+      margin-bottom: 1rem;
+    }
+    .hero-desc {
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: var(--subtext); font-weight: 300;
+      line-height: 1.8; margin-bottom: 2.5rem;
+    }
+
+    /* ─── Countdown ──────────────────────────────────────── */
+    .countdown-wrap {
+      background: var(--dark);
+      border-radius: 20px;
+      padding: 1.6rem 2rem;
+      display: inline-flex; gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .cd-item { text-align: center; }
+    .cd-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.6rem, 6vw, 2.8rem);
+      font-weight: 700; color: var(--white);
+      line-height: 1;
+      display: block;
+    }
+    .cd-label {
+      font-size: clamp(.65rem, 2vw, .75rem);
+      color: var(--dark3);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .cd-sep {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem; color: var(--dark3);
+      align-self: center; padding-bottom: 1.1rem;
+    }
+    .countdown-done {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem; color: var(--mint);
+      text-align: center;
+    }
+
+    .scroll-hint {
+      color: var(--subtext); font-size:.9rem;
+      animation: float 2s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ─── Sections ───────────────────────────────────────── */
+    .section { max-width: 800px; margin: 0 auto; padding: 5rem 1.5rem; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem; color: var(--pink);
+      text-transform: uppercase; letter-spacing: .2em;
+      margin-bottom: .8rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 700; color: var(--dark);
+      margin-bottom: 2rem;
+    }
+
+    /* ─── Info cards ─────────────────────────────────────── */
+    .info-grid { display: grid; gap: 1.2rem; }
+    .info-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 1.8rem 1.8rem;
+      box-shadow: var(--card-shadow);
+      display: flex; align-items: center; gap: 1.4rem;
+      transition: transform .25s ease, box-shadow .25s ease;
+      border-left: 4px solid transparent;
+    }
+    .info-card:nth-child(1) { border-left-color: var(--pink); }
+    .info-card:nth-child(2) { border-left-color: var(--blue); }
+    .info-card:nth-child(3) { border-left-color: var(--mint); }
+    .info-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.1); }
+
+    .ic-icon { font-size: 2.4rem; flex-shrink: 0; }
+    .ic-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem; color: var(--pink);
+      text-transform: uppercase; letter-spacing: .15em;
+      margin-bottom: .25rem;
+    }
+    .ic-value { font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 700; color: var(--dark); }
+    .ic-sub   { font-size: .95rem; color: var(--subtext); margin-top: .2rem; }
+
+    /* ─── Code window ────────────────────────────────────── */
+    .code-window {
+      background: var(--dark);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.22);
+    }
+    .code-bar {
+      background: #2a2a3c;
+      padding: .8rem 1.2rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dot { width:12px; height:12px; border-radius:50%; }
+    .dr { background:#ff5f57; } .dy { background:#febc2e; } .dg { background:#28c840; }
+    .code-fn { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--dark3); margin-left:.5rem; }
+
+    .code-body {
+      padding: 1.6rem 1.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(.78rem, 2.2vw, .92rem);
+      line-height: 2;
+    }
+    .cc { color: var(--dark3); }
+    .ck { color: var(--blue); }
+    .cs { color: var(--mint); }
+    .cv { color: var(--yellow); }
+    .cp { color: var(--pink); }
+    .co { color: var(--peach); }
+    .ln { display: block; }
+
+    /* ─── Location ───────────────────────────────────────── */
+    .map-card {
+      background: var(--white);
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    .map-visual {
+      height: 180px;
+      background: linear-gradient(135deg, #e8f4fd, #fce4ec);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .6rem; position: relative; overflow: hidden;
+    }
+    .map-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 30px,
+        rgba(0,0,0,.03) 30px, rgba(0,0,0,.03) 31px
+      ),
+      repeating-linear-gradient(
+        90deg, transparent, transparent 30px,
+        rgba(0,0,0,.03) 30px, rgba(0,0,0,.03) 31px
+      );
+    }
+    .map-pin { font-size: 3.5rem; animation: pin-bounce 2s ease-in-out infinite; position:relative;z-index:1; }
+    @keyframes pin-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .map-visual-label { font-size:.85rem; color:var(--subtext); position:relative;z-index:1; }
+
+    .map-info { padding: 1.8rem; }
+    .map-name { font-size: 1.3rem; font-weight: 700; color: var(--dark); margin-bottom: .4rem; }
+    .map-addr { color: var(--subtext); font-size: .95rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .map-chips { display:flex; gap:.6rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+    .map-chip {
+      background: #f2f2f7;
+      border-radius: 100px;
+      padding: .3rem .9rem;
+      font-size: .8rem; color: var(--subtext);
+    }
+    .map-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--dark); color: var(--white);
+      padding: .85rem 1.8rem; border-radius: 14px;
+      text-decoration: none; font-weight: 700;
+      font-size: 1rem;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .map-btn:hover { background: var(--pink); transform: translateY(-2px); }
+
+    /* ─── Gallery placeholder ────────────────────────────── */
+    .gallery-note {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.4rem;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+    }
+    .gallery-emoji { font-size: 3rem; margin-bottom: 1rem; display:block; }
+    .gallery-text { color: var(--subtext); line-height: 1.8; font-size: 1rem; }
+
+    /* ─── Message section ────────────────────────────────── */
+    .msg-section {
+      max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 5rem;
+      text-align: center;
+    }
+    .msg-card {
+      background: var(--dark);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      color: var(--white);
+    }
+    .msg-emoji { font-size: 3rem; margin-bottom: 1.2rem; display:block; }
+    .msg-title { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; margin-bottom: 1rem; }
+    .msg-body  { color: #aaaacc; line-height: 1.9; font-size: clamp(.95rem, 2.5vw, 1.1rem); }
+    .msg-body strong { color: var(--yellow); }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 3rem 1.5rem 4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem; color: var(--dark3);
+      line-height: 2;
+    }
+    footer .footer-heart { color: var(--pink); }
+
+    /* ─── Animate-in on scroll ───────────────────────────── */
+    .reveal { opacity:0; transform:translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal:nth-child(2) { transition-delay: .1s; }
+    .reveal:nth-child(3) { transition-delay: .2s; }
+
+    /* ─── Hero photo ─────────────────────────────────────── */
+    .hero-photo-wrap {
+      position: relative;
+      width: clamp(200px, 48vw, 260px);
+      margin: 0 auto 2rem;
+    }
+    .hero-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--blue) 50%, var(--mint) 100%);
+      z-index: 0;
+      animation: ring-spin 6s linear infinite;
+    }
+    @keyframes ring-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .hero-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--blue) 50%, var(--mint) 100%);
+      filter: blur(16px);
+      opacity: .4;
+      z-index: 0;
+    }
+    .hero-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 20%;
+      border: 5px solid var(--white);
+      position: relative;
+      z-index: 1;
+      display: block;
+      box-shadow: 0 8px 32px rgba(243,139,168,.25);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .countdown-wrap { gap: .8rem; padding: 1.2rem 1.2rem; }
+      .cd-sep { display:none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════ Boot loader ════════════ -->
+<div id="boot" onclick="skipBoot()">
+  <div class="term">
+    <div class="tl c" style="animation-delay:.0s">$ npm run baby -- --name="김봄" --version="1.0.0"</div>
+    <div class="tl b" style="animation-delay:.5s">ℹ  Initializing 봄이의 첫 번째 배포...</div>
+    <div class="tl"   style="animation-delay:1.0s">📦 Bundling 365 days of memories...</div>
+    <div style="animation-delay:1.2s; opacity:0; animation: tl-in .35s 1.2s ease forwards;">
+      <div class="prog-wrap"><div class="prog-bar"></div></div>
+    </div>
+    <div class="tl"   style="animation-delay:3.2s">🌸 Tree shaking unnecessary crying... done</div>
+    <div class="tl p" style="animation-delay:3.7s">✓  Build successful!</div>
+    <div class="tl"   style="animation-delay:4.2s">🚀 Deploying to <span style="color:var(--blue)">courtyard-marriott.pangyo</span>...</div>
+    <div class="tl p" style="animation-delay:4.8s">✅ Ready in 365d 0h 0m — 봄이가 배포되었습니다!</div>
+  </div>
+  <div class="boot-skip" style="margin-top:2rem; animation-delay:1s">▌클릭하면 바로 입장합니다</div>
+</div>
+
+<!-- ════════════ Cherry blossom petals ════════════ -->
+<div id="petals"></div>
+
+<!-- ════════════ Main ════════════ -->
+<main id="main">
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      kim-bom v1.0.0 &nbsp;·&nbsp; stable release
+    </div>
+
+    <div class="hero-name">김봄</div>
+    <div class="hero-sub-title">첫 번째 생일 🎂</div>
+
+    <div class="hero-photo-wrap">
+      <img src="bom.jpg" alt="웃고 있는 봄이" class="hero-photo" />
+    </div>
+
+    <p class="hero-desc">
+      세상에 태어나 첫 봄을 맞이하는 봄이의<br />
+      소중한 첫돌잔치에 초대합니다 🌸
+    </p>
+
+    <!-- Countdown -->
+    <div id="countdown-wrap" class="countdown-wrap">
+      <div class="cd-item"><span class="cd-num" id="cd-d">--</span><span class="cd-label">days</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-h">--</span><span class="cd-label">hours</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-m">--</span><span class="cd-label">min</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-s">--</span><span class="cd-label">sec</span></div>
+    </div>
+
+    <div class="scroll-hint">↓ 스크롤을 내려보세요 ↓</div>
+  </section>
+
+  <!-- ─── Event Info ─── -->
+  <section class="section">
+    <div class="section-tag reveal">// event_config.json</div>
+    <h2 class="section-title reveal">행사 안내</h2>
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="ic-icon">📅</div>
+        <div>
+          <div class="ic-label">date</div>
+          <div class="ic-value">2026년 2월 28일 토요일</div>
+          <div class="ic-sub">병오년 (丙午年) 경인월 임인일</div>
+        </div>
+      </div>
+      <div class="info-card reveal">
+        <div class="ic-icon">🕐</div>
+        <div>
+          <div class="ic-label">time</div>
+          <div class="ic-value">오후 12:00~</div>
+          <div class="ic-sub">점심 식사와 함께 즐거운 시간을 나눠요</div>
+        </div>
+      </div>
+      <div class="info-card reveal">
+        <div class="ic-icon">📍</div>
+        <div>
+          <div class="ic-label">location</div>
+          <div class="ic-value">판교 코드야드 메리어트</div>
+          <div class="ic-sub">경기도 성남시 분당구 판교역로 146번길 20</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Release Notes ─── -->
+  <section class="section" style="padding-top:0">
+    <div class="section-tag reveal">## changelog</div>
+    <h2 class="section-title reveal">봄이 릴리즈 노트</h2>
+    <div class="code-window reveal">
+      <div class="code-bar">
+        <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+        <span class="code-fn">CHANGELOG.md — kim-bom@1.0.0</span>
+      </div>
+      <div class="code-body">
+        <span class="ln cc"># ════════════════════════════════════════</span>
+        <span class="ln cc">#  🌸 김봄 v1.0.0  —  2026.02.28</span>
+        <span class="ln cc">#  first stable release after 9 months beta</span>
+        <span class="ln cc"># ════════════════════════════════════════</span>
+        <span class="ln">&nbsp;</span>
+        <span class="ln cc">## ✨ New Features</span>
+        <span class="ln"><span class="cs">+</span> <span class="cv">두 발로 걷기</span>           <span class="cc">// finally stable after many rollbacks</span></span>
+        <span class="ln"><span class="cs">+</span> <span class="cv">엄마 아빠 따라 말하기</span>   <span class="cc">// 말은 서툴지만 귀여움 +1000%</span></span>
+        <span class="ln"><span class="cs">+</span> <span class="cv">손뼉 치기 · 까꿍 반응</span>  <span class="cc">// 성공률 100% · 웃음 보장</span></span>
+        <span class="ln"><span class="cs">+</span> <span class="cv">밥 혼자 먹기 (beta)</span>     <span class="cc">// 성공률 70% — 나머지는 바닥에</span></span>
+        <span class="ln">&nbsp;</span>
+        <span class="ln cc">## 🐛 Bug Fixes</span>
+        <span class="ln"><span class="cp">-</span> <span class="cv">새벽 2시 울음 버그 감소</span> <span class="cc">// 아직 완전 패치는 아님 (WIP)</span></span>
+        <span class="ln"><span class="cp">-</span> <span class="cv">이유식 거부 이슈 해결</span>   <span class="cc">// 맛있는 걸 넣으면 OK</span></span>
+        <span class="ln">&nbsp;</span>
+        <span class="ln cc">## 📊 Stats</span>
+        <span class="ln"><span class="ck">weight</span>    : <span class="co">growing beautifully</span></span>
+        <span class="ln"><span class="ck">cuteness</span>  : <span class="co">∞ / 10</span></span>
+        <span class="ln"><span class="ck">happiness</span> : <span class="cs">████████████</span> <span class="cv">100%</span></span>
+        <span class="ln"><span class="ck">uptime</span>    : <span class="cv">365 days · 100% love guaranteed</span></span>
+        <span class="ln">&nbsp;</span>
+        <span class="ln cc">## 🚀 Next Milestones</span>
+        <span class="ln"><span class="cc">// v1.1.0 — 뛰어다니기</span></span>
+        <span class="ln"><span class="cc">// v1.5.0 — 말이 유창해지기</span></span>
+        <span class="ln"><span class="cc">// v2.0.0 — 유치원 입학 (planned 2028)</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Location ─── -->
+  <section class="section" style="padding-top:0">
+    <div class="section-tag reveal">// location.find()</div>
+    <h2 class="section-title reveal">오시는 길</h2>
+    <div class="map-card reveal">
+      <div class="map-visual">
+        <div class="map-pin">📍</div>
+        <div class="map-visual-label">판교 코드야드 메리어트</div>
+      </div>
+      <div class="map-info">
+        <div class="map-name">코트야드 메리어트 서울 판교</div>
+        <div class="map-addr">
+          경기도 성남시 분당구 판교역로 146번길 20<br />
+          신분당선 · 경강선 <strong>판교역</strong> 5번 출구, 도보 약 5분
+        </div>
+        <div class="map-chips">
+          <span class="map-chip">🚇 판교역 5번 출구</span>
+          <span class="map-chip">🚗 주차 가능</span>
+          <span class="map-chip">🍽 뷔페식 식사 제공</span>
+        </div>
+        <a
+          href="https://map.naver.com/p/entry/place/34738614?placePath=%2Fhome&c=15.00,0,0,0,dh"
+          target="_blank" rel="noopener noreferrer"
+          class="map-btn"
+        >🗺 네이버 지도로 보기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Message ─── -->
+  <section class="msg-section">
+    <div class="msg-card reveal">
+      <span class="msg-emoji">💌</span>
+      <div class="msg-title">부모님의 인사</div>
+      <p class="msg-body">
+        봄이가 세상에 온 지 벌써 일 년이 지났습니다.<br />
+        울고 웃으며 함께해주신 <strong>가족, 친척, 소중한 분들</strong> 덕분에<br />
+        봄이도, 저희도 이 자리까지 올 수 있었습니다.<br /><br />
+        작은 아이가 첫걸음을 떼는 자리에<br />
+        꼭 함께해 주시면 감사하겠습니다. 🌸
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── Footer ─── -->
+<footer>
+  <div>
+    <span class="cc" style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#45475a">
+      // built with <span class="footer-heart">♥</span> by 봄이 아빠<br />
+      // powered by love, coffee &amp; 365 sleepless nights<br />
+      // © 2026 kim-bom &nbsp;·&nbsp; MIT License (free to hug)
+    </span>
+  </div>
+  <div style="font-size:2rem;margin-top:1rem">🌸</div>
+</footer>
+
+<script>
+  /* ── Boot loader ─────────────────────────────────────── */
+  function skipBoot() {
+    document.getElementById('boot').classList.add('gone');
+  }
+  setTimeout(skipBoot, 6000);
+
+  /* ── Cherry blossoms ─────────────────────────────────── */
+  (function spawnPetals() {
+    const wrap = document.getElementById('petals');
+    const COLORS = ['#ffb7c5','#ffc2cf','#ffccd5','#ffa7b8','#ff9eb5','#ffd6df'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      const size = Math.random() * 12 + 8;
+      p.style.cssText = [
+        `left:${Math.random()*100}vw`,
+        `width:${size}px`,
+        `height:${size}px`,
+        `background:${COLORS[Math.floor(Math.random()*COLORS.length)]}`,
+        `animation-duration:${Math.random()*8+7}s`,
+        `animation-delay:${Math.random()*12}s`,
+        `opacity:${Math.random()*.5+.3}`,
+      ].join(';');
+      wrap.appendChild(p);
+    }
+  })();
+
+  /* ── Countdown ───────────────────────────────────────── */
+  const TARGET = new Date('2026-02-28T12:00:00+09:00');
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick() {
+    const now  = new Date();
+    const diff = TARGET - now;
+    if (diff <= 0) {
+      document.getElementById('countdown-wrap').innerHTML =
+        '<p class="countdown-done">🎉 봄이의 첫돌이에요! 축하해요!</p>';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  /   60000);
+    const s = Math.floor((diff %   60000)  /    1000);
+    document.getElementById('cd-d').textContent = pad(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ── Scroll reveal ───────────────────────────────────── */
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
