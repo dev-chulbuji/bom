@@ -308,16 +308,58 @@
     }
     .map-btn:hover { background: var(--pink); transform: translateY(-2px); }
 
-    /* ─── Gallery placeholder ────────────────────────────── */
-    .gallery-note {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 2.4rem;
-      box-shadow: var(--card-shadow);
-      text-align: center;
+    /* ─── Gallery ────────────────────────────────────────── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
     }
-    .gallery-emoji { font-size: 3rem; margin-bottom: 1rem; display:block; }
-    .gallery-text { color: var(--subtext); line-height: 1.8; font-size: 1rem; }
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: transform .3s ease, box-shadow .3s ease;
+      position: relative;
+    }
+    .gallery-item:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,.14); }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+
+    /* 라이트박스 */
+    #lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+    #lightbox.open { opacity: 1; visibility: visible; }
+    #lightbox img {
+      max-width: min(90vw, 560px);
+      max-height: 90vh;
+      border-radius: 20px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    #lightbox-close {
+      position: absolute; top: 1.2rem; right: 1.5rem;
+      color: white; font-size: 2rem; cursor: pointer;
+      line-height: 1; opacity: .7; transition: opacity .2s;
+    }
+    #lightbox-close:hover { opacity: 1; }
+
+    @media (max-width: 480px) {
+      .gallery-grid { gap: .6rem; }
+      .gallery-item { border-radius: 14px; }
+    }
 
     /* ─── Message section ────────────────────────────────── */
     .msg-section {
@@ -417,6 +459,12 @@
     <div class="tl p" style="animation-delay:4.8s">✅ Ready in 365d 0h 0m — 봄이가 배포되었습니다!</div>
   </div>
   <div class="boot-skip" style="margin-top:2rem; animation-delay:1s">▌클릭하면 바로 입장합니다</div>
+</div>
+
+<!-- ════════════ Lightbox ════════════ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <div id="lightbox-close" onclick="closeLightbox()">×</div>
+  <img id="lightbox-img" src="" alt="봄이 사진" />
 </div>
 
 <!-- ════════════ Cherry blossom petals ════════════ -->
@@ -530,6 +578,23 @@
     </div>
   </section>
 
+  <!-- ─── Gallery ─── -->
+  <section class="section" style="padding-top:0">
+    <div class="section-tag reveal">// gallery.map(photo => &lt;Frame /&gt;)</div>
+    <h2 class="section-title reveal">봄이의 순간들</h2>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item" onclick="openLightbox('bom.jpg')">
+        <img src="bom.jpg" alt="봄이 웃는 사진" />
+      </div>
+      <div class="gallery-item" onclick="openLightbox('bom2.jpg')">
+        <img src="bom2.jpg" alt="봄이 진지한 사진" />
+      </div>
+      <div class="gallery-item" onclick="openLightbox('bom3.jpg')">
+        <img src="bom3.jpg" alt="봄이 눈 비비는 사진" />
+      </div>
+    </div>
+  </section>
+
   <!-- ─── Location ─── -->
   <section class="section" style="padding-top:0">
     <div class="section-tag reveal">// location.find()</div>
@@ -639,6 +704,18 @@
   }
   tick();
   setInterval(tick, 1000);
+
+  /* ── Lightbox ────────────────────────────────────────── */
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
 
   /* ── Scroll reveal ───────────────────────────────────── */
   const observer = new IntersectionObserver(
